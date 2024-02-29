@@ -37,9 +37,9 @@ namespace GameOfChance.Services
             return new BetResult
             {
                 AccountBalance = player.AccountBalance,
-                Won = won,
                 PointsChange = pointsChange,
-                GeneratedNumber = generatedNumber
+                GeneratedNumber = generatedNumber,
+                Status = won ? "won" : "lost"
             };
         }
 

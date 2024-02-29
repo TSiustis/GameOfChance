@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using GameOfChance.Models.CustomExceptions;
+using System.Net;
 using System.Text.Json;
 
 namespace GameOfChance.Helpers.Middleware
@@ -25,16 +26,13 @@ namespace GameOfChance.Helpers.Middleware
 
                 switch (error)
                 {
-                    case AppException e:
-                        // custom application error
+                    case AppException:
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
                         break;
-                    case KeyNotFoundException e:
-                        // not found error
+                    case KeyNotFoundException:
                         response.StatusCode = (int)HttpStatusCode.NotFound;
                         break;
                     default:
-                        // unhandled error
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;
                         break;
                 }
