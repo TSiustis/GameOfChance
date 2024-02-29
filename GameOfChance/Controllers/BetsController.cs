@@ -1,5 +1,6 @@
 ﻿using GameOfChance.Models;
 using GameOfChance.Models.Constants;
+using GameOfChance.Models.CustomExceptions;
 using GameOfChance.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,20 +20,22 @@ namespace GameOfChance.Controllers
         [HttpPost]
         public async Task<ActionResult<BetResult>> PlaceBet([FromBody] BetRequestDTO betRequest)
         {
-            if (betRequest.NumberPredicted < 0  || betRequest.NumberPredicted > 9)
-            {
-                return BadRequest(BetConstants.InvalidNumberEntered);
-            }
-
             try
             {
                 var betResult = await _gameService.ProcessBetAsync(betRequest);
                 return Ok(betResult);
             }
-            catch (Exception ex)
+            catch (AppException ex)
             {
-                // Better exception handling can be implemented here
                 return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred");
             }
         }
     }
